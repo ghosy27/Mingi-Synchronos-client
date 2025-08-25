@@ -88,18 +88,16 @@ public sealed class TokenProvider : IDisposable, IMediatorSubscriber
                     tokenUri = MareAuth.AuthFullPath(GetAuthServiceUrl());
                     var secretKey = _serverManager.GetSecretKey(out _)!;
                     var auth = secretKey.GetHash256();
+                    _logger.LogInformation("CLIENT NOT Hashed SECRETKEY: {secretkey}", secretKey);
+                    _logger.LogInformation("CLIENT Hashed SECRETKEY: {auth}", auth);
+
                     _logger.LogInformation("Sending SecretKey Request to server with auth {auth}", string.Join("", identifier.SecretKeyOrOAuth.Take(10)));
                     
                     result = await _httpClient.PostAsync(tokenUri, new FormUrlEncodedContent(
                     [
                             new KeyValuePair<string, string>("auth", auth),
                             new KeyValuePair<string, string>("charaIdent", await _dalamudUtil.GetPlayerNameHashedAsync().ConfigureAwait(false)),
-                    ]), ct).ConfigureAwait(false);
-
-                    _logger.LogInformation("secretkey  is: {secretkey}", secretKey);
-                    _logger.LogInformation("auth  is: {auth}", auth);
-                    _logger.LogInformation("result  is: {result}", result);
-                    _logger.LogInformation("tokenUri  is: {tokenUri}", tokenUri);
+                    ]), ct).ConfigureAwait(false);  
                 }
                 else
                 {
