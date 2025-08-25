@@ -1,15 +1,15 @@
-﻿using MareSynchronos.API.Data.Enum;
-using MareSynchronos.MareConfiguration;
-using MareSynchronos.MareConfiguration.Configurations;
-using MareSynchronos.PlayerData.Data;
-using MareSynchronos.PlayerData.Handlers;
-using MareSynchronos.Services;
-using MareSynchronos.Services.Mediator;
-using MareSynchronos.Utils;
+﻿using MingiSynchronos.API.Data.Enum;
+using MingiSynchronos.MingiConfiguration;
+using MingiSynchronos.MingiConfiguration.Configurations;
+using MingiSynchronos.PlayerData.Data;
+using MingiSynchronos.PlayerData.Handlers;
+using MingiSynchronos.Services;
+using MingiSynchronos.Services.Mediator;
+using MingiSynchronos.Utils;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 
-namespace MareSynchronos.FileCache;
+namespace MingiSynchronos.FileCache;
 
 public sealed class TransientResourceManager : DisposableMediatorSubscriberBase
 {
@@ -26,7 +26,7 @@ public sealed class TransientResourceManager : DisposableMediatorSubscriberBase
     public bool IsTransientRecording { get; private set; } = false;
 
     public TransientResourceManager(ILogger<TransientResourceManager> logger, TransientConfigService configurationService,
-            DalamudUtilService dalamudUtil, MareMediator mediator) : base(logger, mediator)
+            DalamudUtilService dalamudUtil, MingiMediator mediator) : base(logger, mediator)
     {
         _configurationService = configurationService;
         _dalamudUtil = dalamudUtil;

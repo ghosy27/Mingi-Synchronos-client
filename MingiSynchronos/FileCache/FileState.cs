@@ -1,4 +1,4 @@
-﻿namespace MareSynchronos.FileCache;
+﻿namespace MingiSynchronos.FileCache;
 
 public enum FileState
 {
