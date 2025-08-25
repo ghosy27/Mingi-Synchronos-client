@@ -219,7 +219,6 @@ public partial class ApiController
 
     public Task Client_GposeLobbyPushWorldData(UserData userData, WorldData worldData)
     {
-        //Logger.LogDebug("Client_GposeLobbyPushWorldData: {dto}", userData);
         ExecuteSafely(() => Mediator.Publish(new GPoseLobbyReceiveWorldData(userData, worldData)));
         return Task.CompletedTask;
     }

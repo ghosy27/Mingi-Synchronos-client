@@ -833,8 +833,6 @@ public class SettingsUi : WindowMediatorSubscriberBase
         }
 
         _lastTab = "General";
-        //UiSharedService.FontText("Experimental", _uiShared.UidFont);
-        //ImGui.Separator();
 
         _uiShared.BigText("Notes");
         if (_uiShared.IconTextButton(FontAwesomeIcon.StickyNote, "Export all your user notes to clipboard"))

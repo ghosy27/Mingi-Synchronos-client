@@ -221,6 +221,7 @@ public sealed class FileCompactor
         }
     }
 
+    [StructLayout(LayoutKind.Auto)]
     private struct WofFileCompressionInfoV1
     {
         public CompressionAlgorithm Algorithm;
