@@ -35,7 +35,10 @@ public class FileTransferOrchestrator : DisposableMediatorSubscriberBase
 
         Mediator.Subscribe<ConnectedMessage>(this, (msg) =>
         {
+            Logger.LogInformation("[DEBUG] ConnectedMessage received with FileServerAddress: {fileServerAddress}", msg.Connection.ServerInfo.FileServerAddress);
+            Logger.LogInformation("[DEBUG] Raw FileServerAddress value: '{rawValue}'", msg.Connection.ServerInfo.FileServerAddress?.ToString() ?? "NULL");
             FilesCdnUri = msg.Connection.ServerInfo.FileServerAddress;
+            Logger.LogInformation("[DEBUG] FileTransferOrchestrator initialized: {isInitialized}, FilesCdnUri: {filesCdnUri}", IsInitialized, FilesCdnUri);
         });
 
         Mediator.Subscribe<DisconnectedMessage>(this, (msg) =>

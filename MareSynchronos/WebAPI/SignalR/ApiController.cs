@@ -21,8 +21,8 @@ namespace MareSynchronos.WebAPI;
 #pragma warning disable MA0040
 public sealed partial class ApiController : DisposableMediatorSubscriberBase, IMareHubClient
 {
-    public const string MainServer = "Lunae Crescere Incipientis (Official Central Server)";
-    public const string MainServiceUri = "wss://maresynchronos.com";
+    public const string MainServer = "Local Test Server (127.0.0.1)";
+    public const string MainServiceUri = "ws://127.0.0.1:6000";
 
     private readonly DalamudUtilService _dalamudUtil;
     private readonly HubFactory _hubFactory;
@@ -362,7 +362,11 @@ public sealed partial class ApiController : DisposableMediatorSubscriberBase, IM
     public async Task<ConnectionDto> GetConnectionDtoAsync(bool publishConnected)
     {
         var dto = await _mareHub!.InvokeAsync<ConnectionDto>(nameof(GetConnectionDto)).ConfigureAwait(false);
-        if (publishConnected) Mediator.Publish(new ConnectedMessage(dto));
+        Logger.LogInformation("[DEBUG] ConnectionDto received - FileServerAddress: {fileServerAddress}, ServerVersion: {serverVersion}, User: {user}");
+        if (publishConnected) {
+            Logger.LogInformation("[DEBUG] Publishing ConnectedMessage with FileServerAddress: {fileServerAddress}", dto.ServerInfo.FileServerAddress);
+            Mediator.Publish(new ConnectedMessage(dto));
+        }
         return dto;
     }
 

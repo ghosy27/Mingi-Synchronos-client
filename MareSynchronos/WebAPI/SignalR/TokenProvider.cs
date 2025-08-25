@@ -49,6 +49,27 @@ public sealed class TokenProvider : IDisposable, IMediatorSubscriber
         Mediator.UnsubscribeAll(this);
     }
 
+    private Uri GetAuthServiceUrl()
+    {
+        var baseUrl = _serverManager.CurrentApiUrl
+            .Replace("wss://", "http://", StringComparison.OrdinalIgnoreCase)
+            .Replace("ws://", "http://", StringComparison.OrdinalIgnoreCase);
+        
+        // Replace port 6000 with 8080 for auth service
+        if (baseUrl.Contains(":6000"))
+        {
+            baseUrl = baseUrl.Replace(":6000", ":8080");
+        }
+        else if (!baseUrl.Contains(":") && baseUrl.StartsWith("http://"))
+        {
+            // If no port specified, add 8080
+            baseUrl += ":8080";
+        }
+        
+        return new Uri(baseUrl);
+    }
+
+
     public async Task<string> GetNewToken(bool isRenewal, JwtIdentifier identifier, CancellationToken ct)
     {
         Uri tokenUri;
@@ -57,29 +78,32 @@ public sealed class TokenProvider : IDisposable, IMediatorSubscriber
 
         try
         {
+            _logger.LogDebug("GetNewToken: Requesting");
             if (!isRenewal)
             {
                 _logger.LogDebug("GetNewToken: Requesting");
 
                 if (!_serverManager.CurrentServer.UseOAuth2)
                 {
-                    tokenUri = MareAuth.AuthFullPath(new Uri(_serverManager.CurrentApiUrl
-                        .Replace("wss://", "https://", StringComparison.OrdinalIgnoreCase)
-                        .Replace("ws://", "http://", StringComparison.OrdinalIgnoreCase)));
+                    tokenUri = MareAuth.AuthFullPath(GetAuthServiceUrl());
                     var secretKey = _serverManager.GetSecretKey(out _)!;
                     var auth = secretKey.GetHash256();
                     _logger.LogInformation("Sending SecretKey Request to server with auth {auth}", string.Join("", identifier.SecretKeyOrOAuth.Take(10)));
+                    
                     result = await _httpClient.PostAsync(tokenUri, new FormUrlEncodedContent(
                     [
                             new KeyValuePair<string, string>("auth", auth),
                             new KeyValuePair<string, string>("charaIdent", await _dalamudUtil.GetPlayerNameHashedAsync().ConfigureAwait(false)),
                     ]), ct).ConfigureAwait(false);
+
+                    _logger.LogInformation("secretkey  is: {secretkey}", secretKey);
+                    _logger.LogInformation("auth  is: {auth}", auth);
+                    _logger.LogInformation("result  is: {result}", result);
+                    _logger.LogInformation("tokenUri  is: {tokenUri}", tokenUri);
                 }
                 else
                 {
-                    tokenUri = MareAuth.AuthWithOauthFullPath(new Uri(_serverManager.CurrentApiUrl
-                        .Replace("wss://", "https://", StringComparison.OrdinalIgnoreCase)
-                        .Replace("ws://", "http://", StringComparison.OrdinalIgnoreCase)));
+                    tokenUri = MareAuth.AuthFullPath(GetAuthServiceUrl());
                     HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, tokenUri.ToString());
                     request.Content = new FormUrlEncodedContent([
                         new KeyValuePair<string, string>("uid", identifier.UID),
@@ -94,16 +118,16 @@ public sealed class TokenProvider : IDisposable, IMediatorSubscriber
             {
                 _logger.LogDebug("GetNewToken: Renewal");
 
-                tokenUri = MareAuth.RenewTokenFullPath(new Uri(_serverManager.CurrentApiUrl
-                    .Replace("wss://", "https://", StringComparison.OrdinalIgnoreCase)
-                    .Replace("ws://", "http://", StringComparison.OrdinalIgnoreCase)));
+                tokenUri = MareAuth.AuthFullPath(GetAuthServiceUrl());
                 HttpRequestMessage request = new(HttpMethod.Get, tokenUri.ToString());
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _tokenCache[identifier]);
                 result = await _httpClient.SendAsync(request, ct).ConfigureAwait(false);
             }
 
             response = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
+            _logger.LogInformation("response  is: {response}", response);
             result.EnsureSuccessStatusCode();
+
             _tokenCache[identifier] = response;
         }
         catch (HttpRequestException ex)
@@ -253,9 +277,7 @@ public sealed class TokenProvider : IDisposable, IMediatorSubscriber
                 return false;
         }
 
-        var tokenUri = MareAuth.RenewOAuthTokenFullPath(new Uri(currentServer.ServerUri
-            .Replace("wss://", "https://", StringComparison.OrdinalIgnoreCase)
-            .Replace("ws://", "http://", StringComparison.OrdinalIgnoreCase)));
+        tokenUri = MareAuth.AuthFullPath(GetAuthServiceUrl());
         HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, tokenUri.ToString());
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", oauth2.Value.OAuthToken);
         _logger.LogInformation("Sending Request to server with auth {auth}", string.Join("", oauth2.Value.OAuthToken.Take(10)));
