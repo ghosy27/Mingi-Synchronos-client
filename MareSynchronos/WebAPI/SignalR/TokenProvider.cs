@@ -277,7 +277,7 @@ public sealed class TokenProvider : IDisposable, IMediatorSubscriber
                 return false;
         }
 
-        tokenUri = MareAuth.AuthFullPath(GetAuthServiceUrl());
+        var tokenUri = MareAuth.AuthFullPath(GetAuthServiceUrl());
         HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, tokenUri.ToString());
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", oauth2.Value.OAuthToken);
         _logger.LogInformation("Sending Request to server with auth {auth}", string.Join("", oauth2.Value.OAuthToken.Take(10)));
