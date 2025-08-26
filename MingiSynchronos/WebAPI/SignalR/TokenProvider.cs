@@ -140,7 +140,7 @@ public sealed class TokenProvider : IDisposable, IMediatorSubscriber
                     Mediator.Publish(new NotificationMessage("Error refreshing token", "Your authentication token could not be renewed. Try reconnecting to Mingi manually.",
                     NotificationType.Error));
                 else
-                    Mediator.Publish(new NotificationMessage("Error generating token", "Your authentication token could not be generated. Check Mingis Main UI (/Mingi in chat) to see the error message.",
+                    Mediator.Publish(new NotificationMessage("Error generating token", "Your authentication token could not be generated. Check Mingis Main UI (/mingi in chat) to see the error message.",
                     NotificationType.Error));
                 Mediator.Publish(new DisconnectedMessage());
                 throw new MingiAuthFailureException(response);

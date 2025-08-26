@@ -13,7 +13,7 @@ namespace MingiSynchronos.Services;
 
 public sealed class CommandManagerService : IDisposable
 {
-    private const string _commandName = "/Mingi";
+    private const string _commandName = "/mingi";
 
     private readonly ApiController _apiController;
     private readonly ICommandManager _commandManager;
@@ -38,11 +38,11 @@ public sealed class CommandManagerService : IDisposable
         {
             HelpMessage = "Opens the Mingi Synchronos UI" + Environment.NewLine + Environment.NewLine +
                 "Additionally possible commands:" + Environment.NewLine +
-                "\t /Mingi toggle - Disconnects from Mingi, if connected. Connects to Mingi, if disconnected" + Environment.NewLine +
-                "\t /Mingi toggle on|off - Connects or disconnects to Mingi respectively" + Environment.NewLine +
-                "\t /Mingi gpose - Opens the Mingi Character Data Hub window" + Environment.NewLine +
-                "\t /Mingi analyze - Opens the Mingi Character Data Analysis window" + Environment.NewLine +
-                "\t /Mingi settings - Opens the Mingi Settings window"
+                "\t /mingi toggle - Disconnects from Mingi, if connected. Connects to Mingi, if disconnected" + Environment.NewLine +
+                "\t /mingi toggle on|off - Connects or disconnects to Mingi respectively" + Environment.NewLine +
+                "\t /mingi gpose - Opens the Mingi Character Data Hub window" + Environment.NewLine +
+                "\t /mingi analyze - Opens the Mingi Character Data Analysis window" + Environment.NewLine +
+                "\t /mingi settings - Opens the Mingi Settings window"
         });
     }
 
