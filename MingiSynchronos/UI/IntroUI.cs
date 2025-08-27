@@ -31,7 +31,7 @@ public partial class IntroUi : WindowMediatorSubscriberBase
     private string _timeoutLabel = string.Empty;
     private Task? _timeoutTask;
     private string[]? _tosParagraphs;
-    private bool _useLegacyLogin = false;
+    private bool _useLegacyLogin = true;
 
     public IntroUi(ILogger<IntroUi> logger, UiSharedService uiShared, MingiConfigService configService,
         CacheMonitor fileCacheManager, ServerConfigurationManager serverConfigurationManager, MingiMediator mingiMediator,
@@ -204,11 +204,9 @@ public partial class IntroUi : WindowMediatorSubscriberBase
             using (_uiShared.UidFont.Push())
                 ImGui.TextUnformatted("Service Registration");
             ImGui.Separator();
-            UiSharedService.TextWrapped("To be able to use Mingi Synchronos you will have to register an account.");
-            UiSharedService.TextWrapped("For the official Mingi Synchronos Servers the account creation will be handled on the official Mingi Synchronos Discord. Due to security risks for the server, there is no way to handle this sensibly otherwise.");
-            UiSharedService.TextWrapped("If you want to register at the main server \"" + WebAPI.ApiController.MainServer + "\" join the Discord and follow the instructions as described in #mingi-service.");
-
-            UiSharedService.TextWrapped("For all other non official services you will have to contact the appropriate service provider how to obtain a secret key.");
+            UiSharedService.TextWrapped("To be able to use Mingi Synchronos you will have to register an account using our discord bot which can be found in our Discord Server.");
+            UiSharedService.TextWrapped("The server it's invite only and you can request an invite by contacting @ghosy.");
+            UiSharedService.TextWrapped("The server does not support OAuth2 for me moment but we are planning to support it soon!");
 
             UiSharedService.DistanceSeparator();
 
