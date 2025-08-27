@@ -31,10 +31,6 @@
     "message": "Moddateien, die auf dem Service gespeichert sind, verbleiben auf dem Service, solange es Anforderungen für diese Dateien gibt. Nach einer Zeitspanne in der die Dateien nicht verwendet wurden, werden diese automatisch gelöscht. Du hast auch die Möglichkeit manuell alle Dateien auf dem Service zu löschen. Der Service hat keine Informationen welche Moddateien zu welcher Modifikation gehören.",
     "description": "ToSStrings..ctor"
   },
-  "Paragraph6": {
-    "message": "Dieser Dienst wird ohne Gewähr angeboten. Im Falle eines Missbrauchs tretet dem Mingi Synchronos Discord bei.",
-    "description": "ToSStrings..ctor"
-  },
   "AgreeLabel": {
     "message": "Ich Stimme zu",
     "description": "ToSStrings..ctor"

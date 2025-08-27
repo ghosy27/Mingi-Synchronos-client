@@ -135,7 +135,6 @@ public partial class IntroUi : WindowMediatorSubscriberBase
             UiSharedService.TextWrapped(_tosParagraphs![2]);
             UiSharedService.TextWrapped(_tosParagraphs![3]);
             UiSharedService.TextWrapped(_tosParagraphs![4]);
-            UiSharedService.TextWrapped(_tosParagraphs![5]);
 
             ImGui.Separator();
             if (_timeoutTask?.IsCompleted ?? true)
@@ -208,11 +207,6 @@ public partial class IntroUi : WindowMediatorSubscriberBase
             UiSharedService.TextWrapped("To be able to use Mingi Synchronos you will have to register an account.");
             UiSharedService.TextWrapped("For the official Mingi Synchronos Servers the account creation will be handled on the official Mingi Synchronos Discord. Due to security risks for the server, there is no way to handle this sensibly otherwise.");
             UiSharedService.TextWrapped("If you want to register at the main server \"" + WebAPI.ApiController.MainServer + "\" join the Discord and follow the instructions as described in #mingi-service.");
-
-            if (ImGui.Button("Join the Mingi Synchronos Discord"))
-            {
-                Util.OpenLink("https://discord.gg/mpNdkrTRjW");
-            }
 
             UiSharedService.TextWrapped("For all other non official services you will have to contact the appropriate service provider how to obtain a secret key.");
 
@@ -357,7 +351,7 @@ public partial class IntroUi : WindowMediatorSubscriberBase
             _uiShared.LoadLocalization(_languages.ElementAt(changeLanguageTo).Value);
         }
 
-        _tosParagraphs = [Strings.ToS.Paragraph1, Strings.ToS.Paragraph2, Strings.ToS.Paragraph3, Strings.ToS.Paragraph4, Strings.ToS.Paragraph5, Strings.ToS.Paragraph6];
+        _tosParagraphs = [Strings.ToS.Paragraph1, Strings.ToS.Paragraph2, Strings.ToS.Paragraph3, Strings.ToS.Paragraph4, Strings.ToS.Paragraph5];
     }
 
     [GeneratedRegex("^([A-F0-9]{2})+")]

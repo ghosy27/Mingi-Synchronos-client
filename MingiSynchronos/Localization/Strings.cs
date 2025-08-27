@@ -36,9 +36,6 @@ public static class Strings
             "You will also be able to wipe all the files you have personally uploaded on request. " +
             "The service holds no information about which mod files belong to which mod.");
 
-        public readonly string Paragraph6 = Loc.Localize("Paragraph6",
-            "This service is provided as-is. In case of abuse join the Mingi Synchronos Discord.");
-
         public readonly string ReadLabel = Loc.Localize("ReadLabel", "READ THIS CAREFULLY");
     }
 }
