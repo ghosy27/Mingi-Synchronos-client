@@ -362,9 +362,7 @@ public sealed partial class ApiController : DisposableMediatorSubscriberBase, IM
     public async Task<ConnectionDto> GetConnectionDtoAsync(bool publishConnected)
     {
         var dto = await _MingiHub!.InvokeAsync<ConnectionDto>(nameof(GetConnectionDto)).ConfigureAwait(false);
-        Logger.LogInformation("[DEBUG] ConnectionDto received - FileServerAddress: {fileServerAddress}, ServerVersion: {serverVersion}, User: {user}");
         if (publishConnected) {
-            Logger.LogInformation("[DEBUG] Publishing ConnectedMessage with FileServerAddress: {fileServerAddress}", dto.ServerInfo.FileServerAddress);
             Mediator.Publish(new ConnectedMessage(dto));
         }
         return dto;

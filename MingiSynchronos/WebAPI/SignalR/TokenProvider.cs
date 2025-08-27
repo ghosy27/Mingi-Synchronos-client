@@ -88,8 +88,6 @@ public sealed class TokenProvider : IDisposable, IMediatorSubscriber
                     tokenUri = MingiAuth.AuthFullPath(GetAuthServiceUrl());
                     var secretKey = _serverManager.GetSecretKey(out _)!;
                     var auth = secretKey.GetHash256();
-                    _logger.LogInformation("CLIENT NOT Hashed SECRETKEY: {secretkey}", secretKey);
-                    _logger.LogInformation("CLIENT Hashed SECRETKEY: {auth}", auth);
 
                     _logger.LogInformation("Sending SecretKey Request to server with auth {auth}", string.Join("", identifier.SecretKeyOrOAuth.Take(10)));
                     
@@ -123,7 +121,6 @@ public sealed class TokenProvider : IDisposable, IMediatorSubscriber
             }
 
             response = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
-            _logger.LogInformation("response  is: {response}", response);
             result.EnsureSuccessStatusCode();
 
             _tokenCache[identifier] = response;
