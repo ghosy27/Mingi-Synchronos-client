@@ -12,12 +12,12 @@ public class PluginWarningNotificationService
 {
     private readonly ConcurrentDictionary<UserData, OptionalPluginWarning> _cachedOptionalPluginWarnings = new(UserDataComparer.Instance);
     private readonly IpcManager _ipcManager;
-    private readonly MingiConfigService _MingiConfigService;
+    private readonly MingiConfigService _mingiConfigService;
     private readonly MingiMediator _mediator;
 
-    public PluginWarningNotificationService(MingiConfigService MingiConfigService, IpcManager ipcManager, MingiMediator mediator)
+    public PluginWarningNotificationService(MingiConfigService mingiConfigService, IpcManager ipcManager, MingiMediator mediator)
     {
-        _MingiConfigService = MingiConfigService;
+        _mingiConfigService = mingiConfigService;
         _ipcManager = ipcManager;
         _mediator = mediator;
     }
@@ -28,11 +28,11 @@ public class PluginWarningNotificationService
         {
             _cachedOptionalPluginWarnings[user] = warning = new()
             {
-                ShownCustomizePlusWarning = _MingiConfigService.Current.DisableOptionalPluginWarnings,
-                ShownHeelsWarning = _MingiConfigService.Current.DisableOptionalPluginWarnings,
-                ShownHonorificWarning = _MingiConfigService.Current.DisableOptionalPluginWarnings,
-                ShownMoodlesWarning = _MingiConfigService.Current.DisableOptionalPluginWarnings,
-                ShowPetNicknamesWarning = _MingiConfigService.Current.DisableOptionalPluginWarnings
+                ShownCustomizePlusWarning = _mingiConfigService.Current.DisableOptionalPluginWarnings,
+                ShownHeelsWarning = _mingiConfigService.Current.DisableOptionalPluginWarnings,
+                ShownHonorificWarning = _mingiConfigService.Current.DisableOptionalPluginWarnings,
+                ShownMoodlesWarning = _mingiConfigService.Current.DisableOptionalPluginWarnings,
+                ShowPetNicknamesWarning = _mingiConfigService.Current.DisableOptionalPluginWarnings
             };
         }
 

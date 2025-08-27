@@ -69,18 +69,18 @@ namespace MingiSynchronos;
 public class MingiPlugin : MediatorSubscriberBase, IHostedService
 {
     private readonly DalamudUtilService _dalamudUtil;
-    private readonly MingiConfigService _MingiConfigService;
+    private readonly MingiConfigService _mingiConfigService;
     private readonly ServerConfigurationManager _serverConfigurationManager;
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private IServiceScope? _runtimeServiceScope;
     private Task? _launchTask = null;
 
-    public MingiPlugin(ILogger<MingiPlugin> logger, MingiConfigService MingiConfigService,
+    public MingiPlugin(ILogger<MingiPlugin> logger, MingiConfigService mingiConfigService,
         ServerConfigurationManager serverConfigurationManager,
         DalamudUtilService dalamudUtil,
         IServiceScopeFactory serviceScopeFactory, MingiMediator mediator) : base(logger, mediator)
     {
-        _MingiConfigService = MingiConfigService;
+        _mingiConfigService = mingiConfigService;
         _serverConfigurationManager = serverConfigurationManager;
         _dalamudUtil = dalamudUtil;
         _serviceScopeFactory = serviceScopeFactory;
@@ -141,7 +141,7 @@ public class MingiPlugin : MediatorSubscriberBase, IHostedService
             _runtimeServiceScope = _serviceScopeFactory.CreateScope();
             _runtimeServiceScope.ServiceProvider.GetRequiredService<UiService>();
             _runtimeServiceScope.ServiceProvider.GetRequiredService<CommandManagerService>();
-            if (!_MingiConfigService.Current.HasValidSetup() || !_serverConfigurationManager.HasValidConfig())
+            if (!_mingiConfigService.Current.HasValidSetup() || !_serverConfigurationManager.HasValidConfig())
             {
                 Mediator.Publish(new SwitchToIntroUiMessage());
                 return;
@@ -152,10 +152,10 @@ public class MingiPlugin : MediatorSubscriberBase, IHostedService
             _runtimeServiceScope.ServiceProvider.GetRequiredService<NotificationService>();
 
 #if !DEBUG
-            if (_MingiConfigService.Current.LogLevel != LogLevel.Information)
+            if (_mingiConfigService.Current.LogLevel != LogLevel.Information)
             {
                 Mediator.Publish(new NotificationMessage("Abnormal Log Level",
-                    $"Your log level is set to '{_MingiConfigService.Current.LogLevel}' which is not recommended for normal usage. Set it to '{LogLevel.Information}' in \"Mingi Settings -> Debug\" unless instructed otherwise.",
+                    $"Your log level is set to '{_mingiConfigService.Current.LogLevel}' which is not recommended for normal usage. Set it to '{LogLevel.Information}' in \"Mingi Settings -> Debug\" unless instructed otherwise.",
                     MingiConfiguration.Models.NotificationType.Error, TimeSpan.FromSeconds(15000)));
             }
 #endif

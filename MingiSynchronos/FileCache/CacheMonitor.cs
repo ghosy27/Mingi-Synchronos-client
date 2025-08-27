@@ -102,7 +102,7 @@ public sealed class CacheMonitor : DisposableMediatorSubscriberBase
 
     record WatcherChange(WatcherChangeTypes ChangeType, string? OldPath = null);
     private readonly Dictionary<string, WatcherChange> _watcherChanges = new Dictionary<string, WatcherChange>(StringComparer.OrdinalIgnoreCase);
-    private readonly Dictionary<string, WatcherChange> _MingiChanges = new Dictionary<string, WatcherChange>(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, WatcherChange> _mingiChanges = new Dictionary<string, WatcherChange>(StringComparer.OrdinalIgnoreCase);
 
     public void StopMonitoring()
     {
@@ -115,10 +115,10 @@ public sealed class CacheMonitor : DisposableMediatorSubscriberBase
 
     public bool StorageisNTFS { get; private set; } = false;
 
-    public void StartMingiWatcher(string? MingiPath)
+    public void StartMingiWatcher(string? mingiPath)
     {
         MingiWatcher?.Dispose();
-        if (string.IsNullOrEmpty(MingiPath) || !Directory.Exists(MingiPath))
+        if (string.IsNullOrEmpty(mingiPath) || !Directory.Exists(mingiPath))
         {
             MingiWatcher = null;
             Logger.LogWarning("Mingi file path is not set, cannot start the FSW for Mingi.");
@@ -129,10 +129,10 @@ public sealed class CacheMonitor : DisposableMediatorSubscriberBase
         StorageisNTFS = string.Equals("NTFS", di.DriveFormat, StringComparison.OrdinalIgnoreCase);
         Logger.LogInformation("Mingi Storage is on NTFS drive: {isNtfs}", StorageisNTFS);
 
-        Logger.LogDebug("Initializing Mingi FSW on {path}", MingiPath);
+        Logger.LogDebug("Initializing Mingi FSW on {path}", mingiPath);
         MingiWatcher = new()
         {
-            Path = MingiPath,
+            Path = mingiPath,
             InternalBufferSize = 8388608,
             NotifyFilter = NotifyFilters.CreationTime
                 | NotifyFilters.LastWrite
@@ -156,7 +156,7 @@ public sealed class CacheMonitor : DisposableMediatorSubscriberBase
 
         lock (_watcherChanges)
         {
-            _MingiChanges[e.FullPath] = new(e.ChangeType);
+            _mingiChanges[e.FullPath] = new(e.ChangeType);
         }
 
         _ = MingiWatcherExecution();
@@ -247,18 +247,18 @@ public sealed class CacheMonitor : DisposableMediatorSubscriberBase
     }
 
     private CancellationTokenSource _penumbraFswCts = new();
-    private CancellationTokenSource _MingiFswCts = new();
+    private CancellationTokenSource _mingiFswCts = new();
     public FileSystemWatcher? PenumbraWatcher { get; private set; }
     public FileSystemWatcher? MingiWatcher { get; private set; }
 
     private async Task MingiWatcherExecution()
     {
-        _MingiFswCts = _MingiFswCts.CancelRecreate();
-        var token = _MingiFswCts.Token;
+        _mingiFswCts = _mingiFswCts.CancelRecreate();
+        var token = _mingiFswCts.Token;
         var delay = TimeSpan.FromSeconds(5);
         Dictionary<string, WatcherChange> changes;
-        lock (_MingiChanges)
-            changes = _MingiChanges.ToDictionary(t => t.Key, t => t.Value, StringComparer.Ordinal);
+        lock (_mingiChanges)
+            changes = _mingiChanges.ToDictionary(t => t.Key, t => t.Value, StringComparer.Ordinal);
         try
         {
             do
@@ -271,11 +271,11 @@ public sealed class CacheMonitor : DisposableMediatorSubscriberBase
             return;
         }
 
-        lock (_MingiChanges)
+        lock (_mingiChanges)
         {
             foreach (var key in changes.Keys)
             {
-                _MingiChanges.Remove(key);
+                _mingiChanges.Remove(key);
             }
         }
 
@@ -460,7 +460,7 @@ public sealed class CacheMonitor : DisposableMediatorSubscriberBase
         PenumbraWatcher?.Dispose();
         MingiWatcher?.Dispose();
         _penumbraFswCts?.CancelDispose();
-        _MingiFswCts?.CancelDispose();
+        _mingiFswCts?.CancelDispose();
         _periodicCalculationTokenSource?.CancelDispose();
     }
 

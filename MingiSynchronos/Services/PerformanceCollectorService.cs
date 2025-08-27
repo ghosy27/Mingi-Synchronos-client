@@ -12,19 +12,19 @@ public sealed class PerformanceCollectorService : IHostedService
 {
     private const string _counterSplit = "=>";
     private readonly ILogger<PerformanceCollectorService> _logger;
-    private readonly MingiConfigService _MingiConfigService;
+    private readonly MingiConfigService _mingiConfigService;
     public ConcurrentDictionary<string, RollingList<(TimeOnly, long)>> PerformanceCounters { get; } = new(StringComparer.Ordinal);
     private readonly CancellationTokenSource _periodicLogPruneTaskCts = new();
 
-    public PerformanceCollectorService(ILogger<PerformanceCollectorService> logger, MingiConfigService MingiConfigService)
+    public PerformanceCollectorService(ILogger<PerformanceCollectorService> logger, MingiConfigService mingiConfigService)
     {
         _logger = logger;
-        _MingiConfigService = MingiConfigService;
+        _mingiConfigService = mingiConfigService;
     }
 
     public T LogPerformance<T>(object sender, MingiInterpolatedStringHandler counterName, Func<T> func, int maxEntries = 10000)
     {
-        if (!_MingiConfigService.Current.LogPerformance) return func.Invoke();
+        if (!_mingiConfigService.Current.LogPerformance) return func.Invoke();
 
         string cn = sender.GetType().Name + _counterSplit + counterName.BuildMessage();
 
@@ -51,7 +51,7 @@ public sealed class PerformanceCollectorService : IHostedService
 
     public void LogPerformance(object sender, MingiInterpolatedStringHandler counterName, Action act, int maxEntries = 10000)
     {
-        if (!_MingiConfigService.Current.LogPerformance) { act.Invoke(); return; }
+        if (!_mingiConfigService.Current.LogPerformance) { act.Invoke(); return; }
 
         var cn = sender.GetType().Name + _counterSplit + counterName.BuildMessage();
 
@@ -93,7 +93,7 @@ public sealed class PerformanceCollectorService : IHostedService
 
     internal void PrintPerformanceStats(int limitBySeconds = 0)
     {
-        if (!_MingiConfigService.Current.LogPerformance)
+        if (!_mingiConfigService.Current.LogPerformance)
         {
             _logger.LogWarning("Performance counters are disabled");
         }

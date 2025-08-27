@@ -12,13 +12,13 @@ public sealed class DalamudLoggingProvider : ILoggerProvider
     private readonly ConcurrentDictionary<string, DalamudLogger> _loggers =
         new(StringComparer.OrdinalIgnoreCase);
 
-    private readonly MingiConfigService _MingiConfigService;
+    private readonly MingiConfigService _mingiConfigService;
     private readonly IPluginLog _pluginLog;
     private readonly bool _hasModifiedGameFiles;
 
-    public DalamudLoggingProvider(MingiConfigService MingiConfigService, IPluginLog pluginLog, bool hasModifiedGameFiles)
+    public DalamudLoggingProvider(MingiConfigService mingiConfigService, IPluginLog pluginLog, bool hasModifiedGameFiles)
     {
-        _MingiConfigService = MingiConfigService;
+        _mingiConfigService = mingiConfigService;
         _pluginLog = pluginLog;
         _hasModifiedGameFiles = hasModifiedGameFiles;
     }
@@ -35,7 +35,7 @@ public sealed class DalamudLoggingProvider : ILoggerProvider
             catName = string.Join("", Enumerable.Range(0, 15 - catName.Length).Select(_ => " ")) + catName;
         }
 
-        return _loggers.GetOrAdd(catName, name => new DalamudLogger(name, _MingiConfigService, _pluginLog, _hasModifiedGameFiles));
+        return _loggers.GetOrAdd(catName, name => new DalamudLogger(name, _mingiConfigService, _pluginLog, _hasModifiedGameFiles));
     }
 
     public void Dispose()

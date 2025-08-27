@@ -76,7 +76,7 @@ public sealed class Plugin : IDalamudPlugin
         {
             lb.ClearProviders();
             lb.AddDalamudLogging(pluginLog, gameData.HasModifiedGameDataFiles);
-            lb.AddFile(Path.Combine(traceDir, $"Mingi-trace-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.log"), (opt) =>
+            lb.AddFile(Path.Combine(traceDir, $"mingi-trace-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.log"), (opt) =>
             {
                 opt.Append = true;
                 opt.RollingFilesConvention = FileLoggerOptions.FileRollingConvention.Ascending;

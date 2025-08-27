@@ -14,23 +14,23 @@ public class FileTransferOrchestrator : DisposableMediatorSubscriberBase
 {
     private readonly ConcurrentDictionary<Guid, bool> _downloadReady = new();
     private readonly HttpClient _httpClient;
-    private readonly MingiConfigService _MingiConfig;
+    private readonly MingiConfigService _mingiConfig;
     private readonly object _semaphoreModificationLock = new();
     private readonly TokenProvider _tokenProvider;
     private int _availableDownloadSlots;
     private SemaphoreSlim _downloadSemaphore;
     private int CurrentlyUsedDownloadSlots => _availableDownloadSlots - _downloadSemaphore.CurrentCount;
 
-    public FileTransferOrchestrator(ILogger<FileTransferOrchestrator> logger, MingiConfigService MingiConfig,
+    public FileTransferOrchestrator(ILogger<FileTransferOrchestrator> logger, MingiConfigService mingiConfig,
         MingiMediator mediator, TokenProvider tokenProvider, HttpClient httpClient) : base(logger, mediator)
     {
-        _MingiConfig = MingiConfig;
+        _mingiConfig = mingiConfig;
         _tokenProvider = tokenProvider;
         _httpClient = httpClient;
         var ver = Assembly.GetExecutingAssembly().GetName().Version;
         _httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("MingiSynchronos", ver!.Major + "." + ver!.Minor + "." + ver!.Build));
 
-        _availableDownloadSlots = MingiConfig.Current.ParallelDownloads;
+        _availableDownloadSlots = mingiConfig.Current.ParallelDownloads;
         _downloadSemaphore = new(_availableDownloadSlots, _availableDownloadSlots);
 
         Mediator.Subscribe<ConnectedMessage>(this, (msg) =>
@@ -108,9 +108,9 @@ public class FileTransferOrchestrator : DisposableMediatorSubscriberBase
     {
         lock (_semaphoreModificationLock)
         {
-            if (_availableDownloadSlots != _MingiConfig.Current.ParallelDownloads && _availableDownloadSlots == _downloadSemaphore.CurrentCount)
+            if (_availableDownloadSlots != _mingiConfig.Current.ParallelDownloads && _availableDownloadSlots == _downloadSemaphore.CurrentCount)
             {
-                _availableDownloadSlots = _MingiConfig.Current.ParallelDownloads;
+                _availableDownloadSlots = _mingiConfig.Current.ParallelDownloads;
                 _downloadSemaphore = new(_availableDownloadSlots, _availableDownloadSlots);
             }
         }
@@ -121,9 +121,9 @@ public class FileTransferOrchestrator : DisposableMediatorSubscriberBase
 
     public long DownloadLimitPerSlot()
     {
-        var limit = _MingiConfig.Current.DownloadSpeedLimitInBytes;
+        var limit = _mingiConfig.Current.DownloadSpeedLimitInBytes;
         if (limit <= 0) return 0;
-        limit = _MingiConfig.Current.DownloadSpeedType switch
+        limit = _mingiConfig.Current.DownloadSpeedType switch
         {
             MingiConfiguration.Models.DownloadSpeeds.Bps => limit,
             MingiConfiguration.Models.DownloadSpeeds.KBps => limit * 1024,

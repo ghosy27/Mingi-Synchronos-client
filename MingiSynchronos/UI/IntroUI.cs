@@ -34,8 +34,8 @@ public partial class IntroUi : WindowMediatorSubscriberBase
     private bool _useLegacyLogin = false;
 
     public IntroUi(ILogger<IntroUi> logger, UiSharedService uiShared, MingiConfigService configService,
-        CacheMonitor fileCacheManager, ServerConfigurationManager serverConfigurationManager, MingiMediator MingiMediator,
-        PerformanceCollectorService performanceCollectorService, DalamudUtilService dalamudUtilService) : base(logger, MingiMediator, "Mingi Synchronos Setup", performanceCollectorService)
+        CacheMonitor fileCacheManager, ServerConfigurationManager serverConfigurationManager, MingiMediator mingiMediator,
+        PerformanceCollectorService performanceCollectorService, DalamudUtilService dalamudUtilService) : base(logger, mingiMediator, "Mingi Synchronos Setup", performanceCollectorService)
     {
         _uiShared = uiShared;
         _configService = configService;
@@ -207,7 +207,7 @@ public partial class IntroUi : WindowMediatorSubscriberBase
             ImGui.Separator();
             UiSharedService.TextWrapped("To be able to use Mingi Synchronos you will have to register an account.");
             UiSharedService.TextWrapped("For the official Mingi Synchronos Servers the account creation will be handled on the official Mingi Synchronos Discord. Due to security risks for the server, there is no way to handle this sensibly otherwise.");
-            UiSharedService.TextWrapped("If you want to register at the main server \"" + WebAPI.ApiController.MainServer + "\" join the Discord and follow the instructions as described in #Mingi-service.");
+            UiSharedService.TextWrapped("If you want to register at the main server \"" + WebAPI.ApiController.MainServer + "\" join the Discord and follow the instructions as described in #mingi-service.");
 
             if (ImGui.Button("Join the Mingi Synchronos Discord"))
             {

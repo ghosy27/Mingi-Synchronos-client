@@ -15,7 +15,7 @@ namespace MingiSynchronos.UI;
 
 public class PopoutProfileUi : WindowMediatorSubscriberBase
 {
-    private readonly MingiProfileManager _MingiProfileManager;
+    private readonly MingiProfileManager _mingiProfileManager;
     private readonly PairManager _pairManager;
     private readonly ServerConfigurationManager _serverManager;
     private readonly UiSharedService _uiSharedService;
@@ -28,12 +28,12 @@ public class PopoutProfileUi : WindowMediatorSubscriberBase
     private IDalamudTextureWrap? _textureWrap;
 
     public PopoutProfileUi(ILogger<PopoutProfileUi> logger, MingiMediator mediator, UiSharedService uiBuilder,
-        ServerConfigurationManager serverManager, MingiConfigService MingiConfigService,
-        MingiProfileManager MingiProfileManager, PairManager pairManager, PerformanceCollectorService performanceCollectorService) : base(logger, mediator, "###MingiSynchronosPopoutProfileUI", performanceCollectorService)
+        ServerConfigurationManager serverManager, MingiConfigService mingiConfigService,
+        MingiProfileManager mingiProfileManager, PairManager pairManager, PerformanceCollectorService performanceCollectorService) : base(logger, mediator, "###MingiSynchronosPopoutProfileUI", performanceCollectorService)
     {
         _uiSharedService = uiBuilder;
         _serverManager = serverManager;
-        _MingiProfileManager = MingiProfileManager;
+        _mingiProfileManager = mingiProfileManager;
         _pairManager = pairManager;
         Flags = ImGuiWindowFlags.NoDecoration;
 
@@ -59,7 +59,7 @@ public class PopoutProfileUi : WindowMediatorSubscriberBase
                 _lastMainSize = msg.Size;
             }
             var mainPos = msg.Position == Vector2.Zero ? _lastMainPos : msg.Position;
-            if (MingiConfigService.Current.ProfilePopoutRight)
+            if (mingiConfigService.Current.ProfilePopoutRight)
             {
                 Position = new(mainPos.X + _lastMainSize.X * ImGuiHelpers.GlobalScale, mainPos.Y);
             }
@@ -85,22 +85,22 @@ public class PopoutProfileUi : WindowMediatorSubscriberBase
         {
             var spacing = ImGui.GetStyle().ItemSpacing;
 
-            var MingiProfile = _MingiProfileManager.GetMingiProfile(_pair.UserData);
+            var mingiProfile = _mingiProfileManager.GetMingiProfile(_pair.UserData);
 
-            if (_textureWrap == null || !MingiProfile.ImageData.Value.SequenceEqual(_lastProfilePicture))
+            if (_textureWrap == null || !mingiProfile.ImageData.Value.SequenceEqual(_lastProfilePicture))
             {
                 _textureWrap?.Dispose();
-                _lastProfilePicture = MingiProfile.ImageData.Value;
+                _lastProfilePicture = mingiProfile.ImageData.Value;
                 _textureWrap = _uiSharedService.LoadImage(_lastProfilePicture);
             }
 
-            if (_supporterTextureWrap == null || !MingiProfile.SupporterImageData.Value.SequenceEqual(_lastSupporterPicture))
+            if (_supporterTextureWrap == null || !mingiProfile.SupporterImageData.Value.SequenceEqual(_lastSupporterPicture))
             {
                 _supporterTextureWrap?.Dispose();
                 _supporterTextureWrap = null;
-                if (!string.IsNullOrEmpty(MingiProfile.Base64SupporterPicture))
+                if (!string.IsNullOrEmpty(mingiProfile.Base64SupporterPicture))
                 {
-                    _lastSupporterPicture = MingiProfile.SupporterImageData.Value;
+                    _lastSupporterPicture = mingiProfile.SupporterImageData.Value;
                     _supporterTextureWrap = _uiSharedService.LoadImage(_lastSupporterPicture);
                 }
             }
@@ -158,7 +158,7 @@ public class PopoutProfileUi : WindowMediatorSubscriberBase
             ImGui.Separator();
             var font = _uiSharedService.GameFont.Push();
             var remaining = ImGui.GetWindowContentRegionMax().Y - ImGui.GetCursorPosY();
-            var descText = MingiProfile.Description;
+            var descText = mingiProfile.Description;
             var textSize = ImGui.CalcTextSize(descText, wrapWidth: 256f * ImGuiHelpers.GlobalScale);
             bool trimmed = textSize.Y > remaining;
             while (textSize.Y > remaining && descText.Contains(' '))
@@ -166,7 +166,7 @@ public class PopoutProfileUi : WindowMediatorSubscriberBase
                 descText = descText[..descText.LastIndexOf(' ')].TrimEnd();
                 textSize = ImGui.CalcTextSize(descText + $"...{Environment.NewLine}[Open Full Profile for complete description]", wrapWidth: 256f * ImGuiHelpers.GlobalScale);
             }
-            UiSharedService.TextWrapped(trimmed ? descText + $"...{Environment.NewLine}[Open Full Profile for complete description]" : MingiProfile.Description);
+            UiSharedService.TextWrapped(trimmed ? descText + $"...{Environment.NewLine}[Open Full Profile for complete description]" : mingiProfile.Description);
             font.Dispose();
 
             var padding = ImGui.GetStyle().WindowPadding.X / 2;

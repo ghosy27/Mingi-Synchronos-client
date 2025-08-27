@@ -15,15 +15,15 @@ public sealed class MingiMediator : IHostedService
     private readonly CancellationTokenSource _loopCts = new();
     private readonly ConcurrentQueue<MessageBase> _messageQueue = new();
     private readonly PerformanceCollectorService _performanceCollector;
-    private readonly MingiConfigService _MingiConfigService;
+    private readonly MingiConfigService _mingiConfigService;
     private readonly ConcurrentDictionary<Type, HashSet<SubscriberAction>> _subscriberDict = [];
     private bool _processQueue = false;
     private readonly ConcurrentDictionary<Type, MethodInfo?> _genericExecuteMethods = new();
-    public MingiMediator(ILogger<MingiMediator> logger, PerformanceCollectorService performanceCollector, MingiConfigService MingiConfigService)
+    public MingiMediator(ILogger<MingiMediator> logger, PerformanceCollectorService performanceCollector, MingiConfigService mingiConfigService)
     {
         _logger = logger;
         _performanceCollector = performanceCollector;
-        _MingiConfigService = MingiConfigService;
+        _mingiConfigService = mingiConfigService;
     }
 
     public void PrintSubscriberInfo()
@@ -164,7 +164,7 @@ public sealed class MingiMediator : IHostedService
         {
             try
             {
-                if (_MingiConfigService.Current.LogPerformance)
+                if (_mingiConfigService.Current.LogPerformance)
                 {
                     var isSameThread = message.KeepThreadContext ? "$" : string.Empty;
                     _performanceCollector.LogPerformance(this, $"{isSameThread}Execute>{message.GetType().Name}+{subscriber.Subscriber.GetType().Name}>{subscriber.Subscriber}",

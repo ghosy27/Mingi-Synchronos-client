@@ -15,14 +15,14 @@ public sealed class FileCompactor
     private readonly WofFileCompressionInfoV1 _efInfo;
     private readonly ILogger<FileCompactor> _logger;
 
-    private readonly MingiConfigService _MingiConfigService;
+    private readonly MingiConfigService _mingiConfigService;
     private readonly DalamudUtilService _dalamudUtilService;
 
-    public FileCompactor(ILogger<FileCompactor> logger, MingiConfigService MingiConfigService, DalamudUtilService dalamudUtilService)
+    public FileCompactor(ILogger<FileCompactor> logger, MingiConfigService mingiConfigService, DalamudUtilService dalamudUtilService)
     {
         _clusterSizes = new(StringComparer.Ordinal);
         _logger = logger;
-        _MingiConfigService = MingiConfigService;
+        _mingiConfigService = mingiConfigService;
         _dalamudUtilService = dalamudUtilService;
         _efInfo = new WofFileCompressionInfoV1
         {
@@ -50,7 +50,7 @@ public sealed class FileCompactor
         MassCompactRunning = true;
 
         int currentFile = 1;
-        var allFiles = Directory.EnumerateFiles(_MingiConfigService.Current.CacheFolder).ToList();
+        var allFiles = Directory.EnumerateFiles(_mingiConfigService.Current.CacheFolder).ToList();
         int allFilesCount = allFiles.Count;
         foreach (var file in allFiles)
         {
@@ -82,7 +82,7 @@ public sealed class FileCompactor
     {
         await File.WriteAllBytesAsync(filePath, decompressedFile, token).ConfigureAwait(false);
 
-        if (_dalamudUtilService.IsWine || !_MingiConfigService.Current.UseCompactor)
+        if (_dalamudUtilService.IsWine || !_mingiConfigService.Current.UseCompactor)
         {
             return;
         }

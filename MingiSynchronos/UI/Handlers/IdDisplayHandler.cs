@@ -11,7 +11,7 @@ namespace MingiSynchronos.UI.Handlers;
 
 public class IdDisplayHandler
 {
-    private readonly MingiConfigService _MingiConfigService;
+    private readonly MingiConfigService _mingiConfigService;
     private readonly MingiMediator _mediator;
     private readonly ServerConfigurationManager _serverManager;
     private readonly Dictionary<string, bool> _showIdForEntry = new(StringComparer.Ordinal);
@@ -22,11 +22,11 @@ public class IdDisplayHandler
     private bool _popupShown = false;
     private DateTime? _popupTime;
 
-    public IdDisplayHandler(MingiMediator mediator, ServerConfigurationManager serverManager, MingiConfigService MingiConfigService)
+    public IdDisplayHandler(MingiMediator mediator, ServerConfigurationManager serverManager, MingiConfigService mingiConfigService)
     {
         _mediator = mediator;
         _serverManager = serverManager;
-        _MingiConfigService = MingiConfigService;
+        _mingiConfigService = mingiConfigService;
     }
 
     public void DrawGroupText(string id, GroupFullInfoDto group, float textPosX, Func<float> editBoxWidth)
@@ -99,12 +99,12 @@ public class IdDisplayHandler
             {
                 if (!string.Equals(_lastMouseOverUid, id))
                 {
-                    _popupTime = DateTime.UtcNow.AddSeconds(_MingiConfigService.Current.ProfileDelay);
+                    _popupTime = DateTime.UtcNow.AddSeconds(_mingiConfigService.Current.ProfileDelay);
                 }
 
                 _lastMouseOverUid = id;
 
-                if (_popupTime > DateTime.UtcNow || !_MingiConfigService.Current.ProfilesShow)
+                if (_popupTime > DateTime.UtcNow || !_mingiConfigService.Current.ProfilesShow)
                 {
                     ImGui.SetTooltip("Left click to switch between UID display and nick" + Environment.NewLine
                         + "Right click to change nick for " + pair.UserData.AliasOrUID + Environment.NewLine
@@ -222,11 +222,11 @@ public class IdDisplayHandler
             playerText = pair.UserData.AliasOrUID;
         }
 
-        if (_MingiConfigService.Current.ShowCharacterNameInsteadOfNotesForVisible && pair.IsVisible && !showUidInsteadOfName)
+        if (_mingiConfigService.Current.ShowCharacterNameInsteadOfNotesForVisible && pair.IsVisible && !showUidInsteadOfName)
         {
             playerText = pair.PlayerName;
             textIsUid = false;
-            if (_MingiConfigService.Current.PreferNotesOverNamesForVisible)
+            if (_mingiConfigService.Current.PreferNotesOverNamesForVisible)
             {
                 var note = pair.GetNote();
                 if (note != null)

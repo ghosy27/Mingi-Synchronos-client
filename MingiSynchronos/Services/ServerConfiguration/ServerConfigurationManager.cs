@@ -18,25 +18,25 @@ public class ServerConfigurationManager
 {
     private readonly ServerConfigService _configService;
     private readonly DalamudUtilService _dalamudUtil;
-    private readonly MingiConfigService _MingiConfigService;
+    private readonly MingiConfigService _mingiConfigService;
     private readonly HttpClient _httpClient;
     private readonly ILogger<ServerConfigurationManager> _logger;
-    private readonly MingiMediator _MingiMediator;
+    private readonly MingiMediator _mingiMediator;
     private readonly NotesConfigService _notesConfig;
     private readonly ServerTagConfigService _serverTagConfig;
 
     public ServerConfigurationManager(ILogger<ServerConfigurationManager> logger, ServerConfigService configService,
         ServerTagConfigService serverTagConfig, NotesConfigService notesConfig, DalamudUtilService dalamudUtil,
-        MingiConfigService MingiConfigService, HttpClient httpClient, MingiMediator MingiMediator)
+        MingiConfigService mingiConfigService, HttpClient httpClient, MingiMediator mingiMediator)
     {
         _logger = logger;
         _configService = configService;
         _serverTagConfig = serverTagConfig;
         _notesConfig = notesConfig;
         _dalamudUtil = dalamudUtil;
-        _MingiConfigService = MingiConfigService;
+        _mingiConfigService = mingiConfigService;
         _httpClient = httpClient;
-        _MingiMediator = MingiMediator;
+        _mingiMediator = mingiMediator;
         EnsureMainExists();
     }
 
@@ -298,7 +298,7 @@ public class ServerConfigurationManager
     {
         CurrentServerTagStorage().ServerAvailablePairTags.Add(tag);
         _serverTagConfig.Save();
-        _MingiMediator.Publish(new RefreshUiMessage());
+        _mingiMediator.Publish(new RefreshUiMessage());
     }
 
     internal void AddTagForUid(string uid, string tagName)
@@ -306,7 +306,7 @@ public class ServerConfigurationManager
         if (CurrentServerTagStorage().UidServerPairedUserTags.TryGetValue(uid, out var tags))
         {
             tags.Add(tagName);
-            _MingiMediator.Publish(new RefreshUiMessage());
+            _mingiMediator.Publish(new RefreshUiMessage());
         }
         else
         {
@@ -410,7 +410,7 @@ public class ServerConfigurationManager
             RemoveTagForUid(uid, tag, save: false);
         }
         _serverTagConfig.Save();
-        _MingiMediator.Publish(new RefreshUiMessage());
+        _mingiMediator.Publish(new RefreshUiMessage());
     }
 
     internal void RemoveTagForUid(string uid, string tagName, bool save = true)
@@ -422,7 +422,7 @@ public class ServerConfigurationManager
             if (save)
             {
                 _serverTagConfig.Save();
-                _MingiMediator.Publish(new RefreshUiMessage());
+                _mingiMediator.Publish(new RefreshUiMessage());
             }
         }
     }
@@ -463,7 +463,7 @@ public class ServerConfigurationManager
 
     internal void AutoPopulateNoteForUid(string uid, string note)
     {
-        if (!_MingiConfigService.Current.AutoPopulateEmptyNotesFromCharaName
+        if (!_mingiConfigService.Current.AutoPopulateEmptyNotesFromCharaName
             || GetNoteForUid(uid) != null)
             return;
 

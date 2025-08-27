@@ -7,15 +7,15 @@ namespace MingiSynchronos.Interop;
 
 internal sealed class DalamudLogger : ILogger
 {
-    private readonly MingiConfigService _MingiConfigService;
+    private readonly MingiConfigService _mingiConfigService;
     private readonly string _name;
     private readonly IPluginLog _pluginLog;
     private readonly bool _hasModifiedGameFiles;
 
-    public DalamudLogger(string name, MingiConfigService MingiConfigService, IPluginLog pluginLog, bool hasModifiedGameFiles)
+    public DalamudLogger(string name, MingiConfigService mingiConfigService, IPluginLog pluginLog, bool hasModifiedGameFiles)
     {
         _name = name;
-        _MingiConfigService = MingiConfigService;
+        _mingiConfigService = mingiConfigService;
         _pluginLog = pluginLog;
         _hasModifiedGameFiles = hasModifiedGameFiles;
     }
@@ -24,7 +24,7 @@ internal sealed class DalamudLogger : ILogger
 
     public bool IsEnabled(LogLevel logLevel)
     {
-        return (int)_MingiConfigService.Current.LogLevel <= (int)logLevel;
+        return (int)_mingiConfigService.Current.LogLevel <= (int)logLevel;
     }
 
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)

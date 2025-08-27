@@ -29,27 +29,27 @@ public sealed partial class ApiController : DisposableMediatorSubscriberBase, IM
     private readonly PairManager _pairManager;
     private readonly ServerConfigurationManager _serverManager;
     private readonly TokenProvider _tokenProvider;
-    private readonly MingiConfigService _MingiConfigService;
+    private readonly MingiConfigService _mingiConfigService;
     private CancellationTokenSource _connectionCancellationTokenSource;
     private ConnectionDto? _connectionDto;
     private bool _doNotNotifyOnNextInfo = false;
     private CancellationTokenSource? _healthCheckTokenSource = new();
     private bool _initialized;
     private string? _lastUsedToken;
-    private HubConnection? _MingiHub;
+    private HubConnection? _mingiHub;
     private ServerState _serverState;
     private CensusUpdateMessage? _lastCensus;
 
     public ApiController(ILogger<ApiController> logger, HubFactory hubFactory, DalamudUtilService dalamudUtil,
         PairManager pairManager, ServerConfigurationManager serverManager, MingiMediator mediator,
-        TokenProvider tokenProvider, MingiConfigService MingiConfigService) : base(logger, mediator)
+        TokenProvider tokenProvider, MingiConfigService mingiConfigService) : base(logger, mediator)
     {
         _hubFactory = hubFactory;
         _dalamudUtil = dalamudUtil;
         _pairManager = pairManager;
         _serverManager = serverManager;
         _tokenProvider = tokenProvider;
-        _MingiConfigService = MingiConfigService;
+        _mingiConfigService = mingiConfigService;
         _connectionCancellationTokenSource = new CancellationTokenSource();
 
         Mediator.Subscribe<DalamudLoginMessage>(this, (_) => DalamudUtilOnLogIn());
@@ -102,7 +102,7 @@ public sealed partial class ApiController : DisposableMediatorSubscriberBase, IM
 
     public async Task<bool> CheckClientHealth()
     {
-        return await _MingiHub!.InvokeAsync<bool>(nameof(CheckClientHealth)).ConfigureAwait(false);
+        return await _mingiHub!.InvokeAsync<bool>(nameof(CheckClientHealth)).ConfigureAwait(false);
     }
 
     public async Task CreateConnectionsAsync()
@@ -222,10 +222,10 @@ public sealed partial class ApiController : DisposableMediatorSubscriberBase, IM
 
                 if (token.IsCancellationRequested) break;
 
-                _MingiHub = _hubFactory.GetOrCreate(token);
+                _mingiHub = _hubFactory.GetOrCreate(token);
                 InitializeApiHooks();
 
-                await _MingiHub.StartAsync(token).ConfigureAwait(false);
+                await _mingiHub.StartAsync(token).ConfigureAwait(false);
 
                 _connectionDto = await GetConnectionDto().ConfigureAwait(false);
 
@@ -259,7 +259,7 @@ public sealed partial class ApiController : DisposableMediatorSubscriberBase, IM
                 if (_dalamudUtil.HasModifiedGameFiles)
                 {
                     Logger.LogError("Detected modified game files on connection");
-                    if (!_MingiConfigService.Current.DebugStopWhining)
+                    if (!_mingiConfigService.Current.DebugStopWhining)
                         Mediator.Publish(new NotificationMessage("Modified Game Files detected",
                             "Dalamud is reporting your FFXIV installation has modified game files. Any mods installed through TexTools will produce this message. " +
                             "Mingi Synchronos, Penumbra, and some other plugins assume your FFXIV installation is unmodified in order to work. " +
@@ -272,7 +272,7 @@ public sealed partial class ApiController : DisposableMediatorSubscriberBase, IM
                 {
                     _naggedAboutLod = true;
                     Logger.LogWarning("Model LOD is enabled during connection");
-                    if (!_MingiConfigService.Current.DebugStopWhining)
+                    if (!_mingiConfigService.Current.DebugStopWhining)
                     {
                         Mediator.Publish(new NotificationMessage("Model LOD is enabled",
                             "You have \"Use low-detail models on distant objects (LOD)\" enabled. Having model LOD enabled is known to be a reason to cause " +
@@ -361,7 +361,7 @@ public sealed partial class ApiController : DisposableMediatorSubscriberBase, IM
 
     public async Task<ConnectionDto> GetConnectionDtoAsync(bool publishConnected)
     {
-        var dto = await _MingiHub!.InvokeAsync<ConnectionDto>(nameof(GetConnectionDto)).ConfigureAwait(false);
+        var dto = await _mingiHub!.InvokeAsync<ConnectionDto>(nameof(GetConnectionDto)).ConfigureAwait(false);
         if (publishConnected) {
             Mediator.Publish(new ConnectedMessage(dto));
         }
@@ -379,7 +379,7 @@ public sealed partial class ApiController : DisposableMediatorSubscriberBase, IM
 
     private async Task ClientHealthCheckAsync(CancellationToken ct)
     {
-        while (!ct.IsCancellationRequested && _MingiHub != null)
+        while (!ct.IsCancellationRequested && _mingiHub != null)
         {
             await Task.Delay(TimeSpan.FromSeconds(30), ct).ConfigureAwait(false);
             Logger.LogDebug("Checking Client Health State");
@@ -417,7 +417,7 @@ public sealed partial class ApiController : DisposableMediatorSubscriberBase, IM
 
     private void InitializeApiHooks()
     {
-        if (_MingiHub == null) return;
+        if (_mingiHub == null) return;
 
         Logger.LogDebug("Initializing data");
         OnDownloadReady((guid) => _ = Client_DownloadReady(guid));
@@ -580,7 +580,7 @@ public sealed partial class ApiController : DisposableMediatorSubscriberBase, IM
         Logger.LogInformation("Stopping existing connection");
         await _hubFactory.DisposeHubAsync().ConfigureAwait(false);
 
-        if (_MingiHub is not null)
+        if (_mingiHub is not null)
         {
             Mediator.Publish(new EventMessage(new Services.Events.Event(nameof(ApiController), Services.Events.EventSeverity.Informational,
                 $"Stopping existing connection to {_serverManager.CurrentServer.ServerName}")));
@@ -588,7 +588,7 @@ public sealed partial class ApiController : DisposableMediatorSubscriberBase, IM
             _initialized = false;
             _healthCheckTokenSource?.Cancel();
             Mediator.Publish(new DisconnectedMessage());
-            _MingiHub = null;
+            _mingiHub = null;
             _connectionDto = null;
         }
 

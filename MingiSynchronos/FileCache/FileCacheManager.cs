@@ -17,7 +17,7 @@ public sealed class FileCacheManager : IHostedService
     public const string CsvSplit = "|";
     public const string PenumbraPrefix = "{penumbra}";
     private readonly MingiConfigService _configService;
-    private readonly MingiMediator _MingiMediator;
+    private readonly MingiMediator _mingiMediator;
     private readonly string _csvPath;
     private readonly ConcurrentDictionary<string, List<FileCacheEntity>> _fileCaches = new(StringComparer.Ordinal);
     private readonly SemaphoreSlim _getCachesByPathsSemaphore = new(1, 1);
@@ -26,12 +26,12 @@ public sealed class FileCacheManager : IHostedService
     private readonly ILogger<FileCacheManager> _logger;
     public string CacheFolder => _configService.Current.CacheFolder;
 
-    public FileCacheManager(ILogger<FileCacheManager> logger, IpcManager ipcManager, MingiConfigService configService, MingiMediator MingiMediator)
+    public FileCacheManager(ILogger<FileCacheManager> logger, IpcManager ipcManager, MingiConfigService configService, MingiMediator mingiMediator)
     {
         _logger = logger;
         _ipcManager = ipcManager;
         _configService = configService;
-        _MingiMediator = MingiMediator;
+        _mingiMediator = mingiMediator;
         _csvPath = Path.Combine(configService.ConfigurationDirectory, "FileCache.csv");
     }
 
@@ -82,7 +82,7 @@ public sealed class FileCacheManager : IHostedService
 
     public Task<List<FileCacheEntity>> ValidateLocalIntegrity(IProgress<(int, int, FileCacheEntity)> progress, CancellationToken cancellationToken)
     {
-        _MingiMediator.Publish(new HaltScanMessage(nameof(ValidateLocalIntegrity)));
+        _mingiMediator.Publish(new HaltScanMessage(nameof(ValidateLocalIntegrity)));
         _logger.LogInformation("Validating local storage");
         var cacheEntries = _fileCaches.SelectMany(v => v.Value).Where(v => v.IsCacheEntry).ToList();
         List<FileCacheEntity> brokenEntities = [];
@@ -131,7 +131,7 @@ public sealed class FileCacheManager : IHostedService
             }
         }
 
-        _MingiMediator.Publish(new ResumeScanMessage(nameof(ValidateLocalIntegrity)));
+        _mingiMediator.Publish(new ResumeScanMessage(nameof(ValidateLocalIntegrity)));
         return Task.FromResult(brokenEntities);
     }
 
@@ -417,7 +417,7 @@ public sealed class FileCacheManager : IHostedService
         {
             if (!_ipcManager.Penumbra.APIAvailable || string.IsNullOrEmpty(_ipcManager.Penumbra.ModDirectory))
             {
-                _MingiMediator.Publish(new NotificationMessage("Penumbra not connected",
+                _mingiMediator.Publish(new NotificationMessage("Penumbra not connected",
                     "Could not load local file cache data. Penumbra is not connected or not properly set up. Please enable and/or configure Penumbra properly to use Mingi. After, reload Mingi in the Plugin installer.",
                     MingiConfiguration.Models.NotificationType.Error));
             }

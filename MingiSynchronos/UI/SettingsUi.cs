@@ -665,7 +665,7 @@ public class SettingsUi : WindowMediatorSubscriberBase
         if (string.IsNullOrEmpty(_cacheMonitor.MingiWatcher?.Path))
         {
             ImGui.SameLine();
-            using var id = ImRaii.PushId("MingiMonitor");
+            using var id = ImRaii.PushId("mingiMonitor");
             if (_uiShared.IconTextButton(FontAwesomeIcon.ArrowsToCircle, "Try to reinitialize Monitor"))
             {
                 _cacheMonitor.StartMingiWatcher(_configService.Current.CacheFolder);

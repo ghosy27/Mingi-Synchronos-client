@@ -15,20 +15,20 @@ public sealed class UiService : DisposableMediatorSubscriberBase
     private readonly IUiBuilder _uiBuilder;
     private readonly FileDialogManager _fileDialogManager;
     private readonly ILogger<UiService> _logger;
-    private readonly MingiConfigService _MingiConfigService;
+    private readonly MingiConfigService _mingiConfigService;
     private readonly WindowSystem _windowSystem;
     private readonly UiFactory _uiFactory;
 
     public UiService(ILogger<UiService> logger, IUiBuilder uiBuilder,
-        MingiConfigService MingiConfigService, WindowSystem windowSystem,
+        MingiConfigService mingiConfigService, WindowSystem windowSystem,
         IEnumerable<WindowMediatorSubscriberBase> windows,
         UiFactory uiFactory, FileDialogManager fileDialogManager,
-        MingiMediator MingiMediator) : base(logger, MingiMediator)
+        MingiMediator mingiMediator) : base(logger, mingiMediator)
     {
         _logger = logger;
         _logger.LogTrace("Creating {type}", GetType().Name);
         _uiBuilder = uiBuilder;
-        _MingiConfigService = MingiConfigService;
+        _mingiConfigService = mingiConfigService;
         _windowSystem = windowSystem;
         _uiFactory = uiFactory;
         _fileDialogManager = fileDialogManager;
@@ -86,7 +86,7 @@ public sealed class UiService : DisposableMediatorSubscriberBase
 
     public void ToggleMainUi()
     {
-        if (_MingiConfigService.Current.HasValidSetup())
+        if (_mingiConfigService.Current.HasValidSetup())
             Mediator.Publish(new UiToggleMessage(typeof(CompactUi)));
         else
             Mediator.Publish(new UiToggleMessage(typeof(IntroUi)));
@@ -94,7 +94,7 @@ public sealed class UiService : DisposableMediatorSubscriberBase
 
     public void ToggleUi()
     {
-        if (_MingiConfigService.Current.HasValidSetup())
+        if (_mingiConfigService.Current.HasValidSetup())
             Mediator.Publish(new UiToggleMessage(typeof(SettingsUi)));
         else
             Mediator.Publish(new UiToggleMessage(typeof(IntroUi)));

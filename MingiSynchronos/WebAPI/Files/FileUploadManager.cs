@@ -16,19 +16,19 @@ namespace MingiSynchronos.WebAPI.Files;
 public sealed class FileUploadManager : DisposableMediatorSubscriberBase
 {
     private readonly FileCacheManager _fileDbManager;
-    private readonly MingiConfigService _MingiConfigService;
+    private readonly MingiConfigService _mingiConfigService;
     private readonly FileTransferOrchestrator _orchestrator;
     private readonly ServerConfigurationManager _serverManager;
     private readonly Dictionary<string, DateTime> _verifiedUploadedHashes = new(StringComparer.Ordinal);
     private CancellationTokenSource? _uploadCancellationTokenSource = new();
 
     public FileUploadManager(ILogger<FileUploadManager> logger, MingiMediator mediator,
-        MingiConfigService MingiConfigService,
+        MingiConfigService mingiConfigService,
         FileTransferOrchestrator orchestrator,
         FileCacheManager fileDbManager,
         ServerConfigurationManager serverManager) : base(logger, mediator)
     {
-        _MingiConfigService = MingiConfigService;
+        _mingiConfigService = mingiConfigService;
         _orchestrator = orchestrator;
         _fileDbManager = fileDbManager;
         _serverManager = serverManager;
@@ -187,12 +187,12 @@ public sealed class FileUploadManager : DisposableMediatorSubscriberBase
 
         try
         {
-            await UploadFileStream(compressedFile, fileHash, _MingiConfigService.Current.UseAlternativeFileUpload, postProgress, uploadToken).ConfigureAwait(false);
+            await UploadFileStream(compressedFile, fileHash, _mingiConfigService.Current.UseAlternativeFileUpload, postProgress, uploadToken).ConfigureAwait(false);
             _verifiedUploadedHashes[fileHash] = DateTime.UtcNow;
         }
         catch (Exception ex)
         {
-            if (!_MingiConfigService.Current.UseAlternativeFileUpload && ex is not OperationCanceledException)
+            if (!_mingiConfigService.Current.UseAlternativeFileUpload && ex is not OperationCanceledException)
             {
                 Logger.LogWarning(ex, "[{hash}] Error during file upload, trying alternative file upload", fileHash);
                 await UploadFileStream(compressedFile, fileHash, munged: true, postProgress, uploadToken).ConfigureAwait(false);
