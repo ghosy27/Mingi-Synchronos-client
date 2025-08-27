@@ -6,7 +6,7 @@
 
 This fork was made for personal use, but it’s open for anyone to use, modify, or fork to suit their own needs.
 
-> 🛠️ All credit goes to the original developers. This is just a fork — not a replacement or official version.
+> 🛠️ All credit goes to the original developer. This is just a fork — not a replacement or official version.
 
 ---
 
@@ -38,9 +38,6 @@ Feel free to fork, modify, or build on top of this project!
 - Make sure to review and respect the license from the original project.
 - Contributions are welcome via pull requests.
 
-🔧 Feel free to fork and make your own version. Sync responsibly!
 ---
 
-## 🙏 Thanks
-
-Huge thanks to [rootdarkarchon](https://github.com/rootdarkarchon) and everyone involved in Mare Synchronos. This project wouldn't exist without their hard work and dedication to the modding community.
+🔧 Feel free to fork and make your own version. Sync responsibly!
