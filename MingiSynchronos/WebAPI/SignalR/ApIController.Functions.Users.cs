@@ -31,37 +31,37 @@ public partial class ApiController
     public async Task UserAddPair(UserDto user)
     {
         if (!IsConnected) return;
-        await _MingiHub!.SendAsync(nameof(UserAddPair), user).ConfigureAwait(false);
+        await _mingiHub!.SendAsync(nameof(UserAddPair), user).ConfigureAwait(false);
     }
 
     public async Task UserDelete()
     {
         CheckConnection();
-        await _MingiHub!.SendAsync(nameof(UserDelete)).ConfigureAwait(false);
+        await _mingiHub!.SendAsync(nameof(UserDelete)).ConfigureAwait(false);
         await CreateConnectionsAsync().ConfigureAwait(false);
     }
 
     public async Task<List<OnlineUserIdentDto>> UserGetOnlinePairs(CensusDataDto? censusDataDto)
     {
-        return await _MingiHub!.InvokeAsync<List<OnlineUserIdentDto>>(nameof(UserGetOnlinePairs), censusDataDto).ConfigureAwait(false);
+        return await _mingiHub!.InvokeAsync<List<OnlineUserIdentDto>>(nameof(UserGetOnlinePairs), censusDataDto).ConfigureAwait(false);
     }
 
     public async Task<List<UserFullPairDto>> UserGetPairedClients()
     {
-        return await _MingiHub!.InvokeAsync<List<UserFullPairDto>>(nameof(UserGetPairedClients)).ConfigureAwait(false);
+        return await _mingiHub!.InvokeAsync<List<UserFullPairDto>>(nameof(UserGetPairedClients)).ConfigureAwait(false);
     }
 
     public async Task<UserProfileDto> UserGetProfile(UserDto dto)
     {
         if (!IsConnected) return new UserProfileDto(dto.User, Disabled: false, IsNSFW: null, ProfilePictureBase64: null, Description: null);
-        return await _MingiHub!.InvokeAsync<UserProfileDto>(nameof(UserGetProfile), dto).ConfigureAwait(false);
+        return await _mingiHub!.InvokeAsync<UserProfileDto>(nameof(UserGetProfile), dto).ConfigureAwait(false);
     }
 
     public async Task UserPushData(UserCharaDataMessageDto dto)
     {
         try
         {
-            await _MingiHub!.InvokeAsync(nameof(UserPushData), dto).ConfigureAwait(false);
+            await _mingiHub!.InvokeAsync(nameof(UserPushData), dto).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -75,7 +75,7 @@ public partial class ApiController
 
         try
         {
-            await _MingiHub!.InvokeAsync(nameof(SetBulkPermissions), dto).ConfigureAwait(false);
+            await _mingiHub!.InvokeAsync(nameof(SetBulkPermissions), dto).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -86,7 +86,7 @@ public partial class ApiController
     public async Task UserRemovePair(UserDto userDto)
     {
         if (!IsConnected) return;
-        await _MingiHub!.SendAsync(nameof(UserRemovePair), userDto).ConfigureAwait(false);
+        await _mingiHub!.SendAsync(nameof(UserRemovePair), userDto).ConfigureAwait(false);
     }
 
     public async Task UserSetPairPermissions(UserPermissionsDto userPermissions)
@@ -100,13 +100,13 @@ public partial class ApiController
     public async Task UserSetProfile(UserProfileDto userDescription)
     {
         if (!IsConnected) return;
-        await _MingiHub!.InvokeAsync(nameof(UserSetProfile), userDescription).ConfigureAwait(false);
+        await _mingiHub!.InvokeAsync(nameof(UserSetProfile), userDescription).ConfigureAwait(false);
     }
 
     public async Task UserUpdateDefaultPermissions(DefaultPermissionsDto defaultPermissionsDto)
     {
         CheckConnection();
-        await _MingiHub!.InvokeAsync(nameof(UserUpdateDefaultPermissions), defaultPermissionsDto).ConfigureAwait(false);
+        await _mingiHub!.InvokeAsync(nameof(UserUpdateDefaultPermissions), defaultPermissionsDto).ConfigureAwait(false);
     }
 
     private async Task PushCharacterDataInternal(CharacterData character, List<UserData> visibleCharacters)
