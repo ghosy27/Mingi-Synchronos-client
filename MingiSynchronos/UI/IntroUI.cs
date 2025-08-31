@@ -205,7 +205,7 @@ public partial class IntroUi : WindowMediatorSubscriberBase
                 ImGui.TextUnformatted("Service Registration");
             ImGui.Separator();
             UiSharedService.TextWrapped("To be able to use Mingi Synchronos you will have to register an account using our discord bot which can be found in our Discord Server.");
-            UiSharedService.TextWrapped("The server it's invite only and you can request an invite by contacting @ghosy.");
+            UiSharedService.TextWrapped("The server it's private and only the admin can chose the people that can join.");
             UiSharedService.TextWrapped("The server does not support OAuth2 for me moment but we are planning to support it soon!");
 
             UiSharedService.DistanceSeparator();

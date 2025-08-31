@@ -21,7 +21,7 @@ namespace MingiSynchronos.WebAPI;
 #pragma warning disable MA0040
 public sealed partial class ApiController : DisposableMediatorSubscriberBase, IMingiHubClient
 {
-    public const string MainServer = "Mingi";
+    public const string MainServer = "Mingi-Server";
     public const string MainServiceUri = "https://ghosy.site:6000";
 
     private readonly DalamudUtilService _dalamudUtil;
