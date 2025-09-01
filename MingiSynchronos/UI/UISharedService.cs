@@ -884,7 +884,7 @@ public partial class UiSharedService : DisposableMediatorSubscriberBase
                 {
                     ServerName = _customServerName,
                     ServerUri = _customServerUri,
-                    UseOAuth2 = true
+                    UseOAuth2 = false
                 });
                 _customServerName = string.Empty;
                 _customServerUri = string.Empty;
