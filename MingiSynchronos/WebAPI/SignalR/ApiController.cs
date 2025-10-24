@@ -22,7 +22,7 @@ namespace MingiSynchronos.WebAPI;
 public sealed partial class ApiController : DisposableMediatorSubscriberBase, IMingiHubClient
 {
     public const string MainServer = "Mingi-Server";
-    public const string MainServiceUri = "https://ghosy.site:6000";
+    public const string MainServiceUri = "https://fxiv.ghosy.site:6000";
 
     private readonly DalamudUtilService _dalamudUtil;
     private readonly HubFactory _hubFactory;
