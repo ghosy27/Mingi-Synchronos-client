@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Authors></Authors>
     <Company></Company>
-    <Version>1.0.3</Version>
+    <Version>1.0.3.1</Version>
     <Description></Description>
     <Copyright></Copyright>
     <PackageProjectUrl>https://github.com/ghosy27/Mingi-Synchronos-client</PackageProjectUrl>
-    <AssemblyVersion>1.0.3.0</AssemblyVersion>
+    <AssemblyVersion>1.0.3.1</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup>
