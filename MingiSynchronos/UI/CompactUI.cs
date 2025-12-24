@@ -114,11 +114,12 @@ public class CompactUi : WindowMediatorSubscriberBase
 #if DEBUG
         string dev = "Dev Build";
         var ver = Assembly.GetExecutingAssembly().GetName().Version!;
-        WindowName = $"Mingi Synchronos {dev} ({ver.Major}.{ver.Minor}.{ver.Build})###MingiSynchronosMainUI";
+        WindowName = $"Mingi Synchronos {dev} (ver)###MingiSynchronosMainUI";
         Toggle();
 #else
         var ver = Assembly.GetExecutingAssembly().GetName().Version;
-        WindowName = "Mingi Synchronos " + ver.Major + "." + ver.Minor + "." + ver.Build + "###MingiSynchronosMainUI";
+        //
+        WindowName = "Mingi Synchronos " + ver + "###MingiSynchronosMainUI";
 #endif
         Mediator.Subscribe<SwitchToMainUiMessage>(this, (_) => IsOpen = true);
         Mediator.Subscribe<SwitchToIntroUiMessage>(this, (_) => IsOpen = false);
