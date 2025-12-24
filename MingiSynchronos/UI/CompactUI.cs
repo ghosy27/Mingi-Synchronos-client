@@ -152,7 +152,7 @@ public class CompactUi : WindowMediatorSubscriberBase
                 ImGui.AlignTextToFramePadding();
                 ImGui.TextColored(ImGuiColors.DalamudRed, unsupported);
             }
-            UiSharedService.ColorTextWrapped($"Your Mingi Synchronos installation is out of date, the current version is {ver.Major}.{ver.Minor}.{ver.Build}. " +
+            UiSharedService.ColorTextWrapped($"Your Mingi Synchronos installation is out of date, the current version is {ver}. " +
                 $"It is highly recommended to keep Mingi Synchronos up to date. Open /xlplugins and update the plugin.", ImGuiColors.DalamudRed);
         }
 
