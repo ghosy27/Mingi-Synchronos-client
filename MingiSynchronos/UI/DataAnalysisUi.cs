@@ -634,7 +634,7 @@ public class DataAnalysisUi : WindowMediatorSubscriberBase
                     {
                         fileGroupText += " (!)";
                     }
-                    ImRaii.IEndObject fileTab;
+                    ImRaii.TabItemDisposable fileTab = default;
                     using (var textcol = ImRaii.PushColor(ImGuiCol.Text, UiSharedService.Color(new(0, 0, 0, 1)),
                         requiresCompute && !string.Equals(_selectedFileTypeTab, fileGroup.Key, StringComparison.Ordinal)))
                     {

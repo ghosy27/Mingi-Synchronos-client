@@ -109,10 +109,7 @@ public partial class UiSharedService : DisposableMediatorSubscriberBase
 
         UidFont = _pluginInterface.UiBuilder.FontAtlas.NewDelegateFontHandle(e =>
         {
-            e.OnPreBuild(tk => tk.AddDalamudAssetFont(Dalamud.DalamudAsset.NotoSansJpMedium, new()
-            {
-                SizePx = 35
-            }));
+            e.OnPreBuild(tk => tk.AddDalamudDefaultFont(35f)); 
         });
         GameFont = _pluginInterface.UiBuilder.FontAtlas.NewGameFontHandle(new(GameFontFamilyAndSize.Axis12));
         IconFont = _pluginInterface.UiBuilder.IconFontFixedWidthHandle;
