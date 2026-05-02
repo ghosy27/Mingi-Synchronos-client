@@ -45,7 +45,7 @@ public class DalamudUtilService : IHostedService, IMediatorSubscriber
     private DateTime _delayedFrameworkUpdateCheck = DateTime.UtcNow;
     private string _lastGlobalBlockPlayer = string.Empty;
     private string _lastGlobalBlockReason = string.Empty;
-    private ushort _lastZone = 0;
+    private uint _lastZone = 0;
     private readonly Dictionary<string, (string Name, nint Address)> _playerCharas = new(StringComparer.Ordinal);
     private readonly List<string> _notUpdatedCharas = [];
     private bool _sentBetweenAreas = false;
@@ -707,7 +707,7 @@ public class DalamudUtilService : IHostedService, IMediatorSubscriber
 
             if (_condition[ConditionFlag.BetweenAreas] || _condition[ConditionFlag.BetweenAreas51])
             {
-                var zone = (ushort)_clientState.TerritoryType;
+                var zone = _clientState.TerritoryType;
                 if (_lastZone != zone)
                 {
                     _lastZone = zone;
@@ -749,7 +749,7 @@ public class DalamudUtilService : IHostedService, IMediatorSubscriber
             {
                 _logger.LogDebug("Logged in");
                 IsLoggedIn = true;
-                _lastZone = (ushort)_clientState.TerritoryType;
+                _lastZone = _clientState.TerritoryType;
                 _cid = RebuildCID();
                 Mediator.Publish(new DalamudLoginMessage());
             }
